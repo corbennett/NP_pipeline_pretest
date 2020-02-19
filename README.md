@@ -22,3 +22,8 @@ The params file includes:
 Check out the example to see how this is formatted.
 
 The output is a json file saved to the path specified by the second command line argument. The file will specify which validation functions were called and whether they passed (1) or failed (0).
+
+I've also included a short pretest camstim script (example_DOC_short) that outputs the right pkl file format.
+
+
+
