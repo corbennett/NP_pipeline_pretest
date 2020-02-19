@@ -8,7 +8,7 @@ import pretest_validation_functions
 import json
 import pandas as pd
 from sync_dataset import Dataset
-import os, sys
+import sys
 
 
 def main(argv):
@@ -44,8 +44,8 @@ def main(argv):
     
     
     
-    save_dir= argv[2]
-    with open(os.path.join(save_dir, 'validation_results.json'), 'w') as out:
+    save_path= argv[2]
+    with open(save_path, 'w') as out:
         json.dump(validation_results, out, indent=2)
     
     
