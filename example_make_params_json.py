@@ -5,6 +5,7 @@ Created on Tue Feb 18 16:59:16 2020
 @author: svc_ccg
 """
 import json
+import os
 
 params = {  'file_paths': {
                     'SYNC_FILE_PATH': r"Z:\pretest\pretest200218124848.sync",
