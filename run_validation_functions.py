@@ -19,27 +19,24 @@ def main(argv):
 #    with open(r"Z:\pretest\params.json") as json_params:
 #        params = json.load(json_params)
     
-    
     syncDataset = Dataset(params['file_paths']['SYNC_FILE_PATH'])
     pklData = pd.read_pickle(params['file_paths']['PKL_FILE_PATH'])
+    
+    datastream_dict = {'sync' : syncDataset,
+                       'pkl' : pklData}
 
     #### Run validation functions ####
     validation_results = {}
     functions_to_run = params['functions_to_run']
     for func_dict in functions_to_run:
         func_name = func_dict['function']
+        output_name = func_dict['output_name']
         kwargs = func_dict['args']
+        datastream = datastream_dict[func_dict['data_stream']]
+        
         func = getattr(pretest_validation_functions, func_name)
         
-        if 'cam' in func_name:
-            func_key = func_name + '_' + kwargs['line_label']
-        else:
-            func_key = func_name
-        
-        if 'sync' in func_name:
-            validation_results[func_key] = int(func(syncDataset, **kwargs))
-        else: 
-            validation_results[func_key] = int(func(pklData, **kwargs))
+        validation_results[output_name] = int(func(datastream, **kwargs))
     
     
     
