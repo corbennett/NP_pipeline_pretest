@@ -1,19 +1,21 @@
 # NP_pipeline_pretest
-validation functions to run before NP data collection
+Validation functions to run after the pretest on NP pipeline rigs. The pretest should output a sync file (hdf5) and a pkl file (DOC format). 
 
-dependencies: 
-  numpy
-  pandas
-  json
-  h5py  
+Dependencies: 
+  * numpy
+  * pandas
+  * json
+  * h5py  
 
 Run on command line:
 ```
 python run_validation_functions.py path_to_json_params path_to_results_save_directory
 ```
 
-The params file should include paths to 
-1. sync hdf5 file
-2. foraging2 pkl file in the DOC format
+The params file includes:
+1. path to sync file
+2. path to pkl file
+3. line labels for sync
+4. criteria for each QC function
 
-Other params specify the sync line labels and QC criteria for each QC function. 
+Check out the example to see how this is formatted.
