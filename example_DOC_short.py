@@ -30,7 +30,7 @@ params = {
     "pre_change_time": 2.25,
     "stimulus_window": 6.0,
     "response_window": [0.15,1.0],
-    "max_task_duration_min": 0.25,
+    "max_task_duration_min": 1,
 }
 
 f = DoCTask(window=window,
