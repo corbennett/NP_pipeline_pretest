@@ -9,7 +9,7 @@ Dependencies:
 
 The validation functions can be run from the command line:
 ```
-python run_validation_functions.py path_to_json_params path_to_results_save_directory
+python run_validation_functions.py path_to_json_params path_to_results_save_file
 ```
 
 The params file includes:
@@ -20,4 +20,4 @@ The params file includes:
 
 Check out the example to see how this is formatted.
 
-The output is a json file saved to the directory specified by the second command line argument. The file will specify which validation functions were called and whether they passed (1) or failed (0).
+The output is a json file saved to the path specified by the second command line argument. The file will specify which validation functions were called and whether they passed (1) or failed (0).
