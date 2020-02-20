@@ -15,7 +15,7 @@ python run_validation_functions.py params.json results.json
 * 'functions_to_run': list containing a dictionary for every validation function that should be run on pretest data. These dictionaries contain the following keys:
   * 'function': name of function to run (should be one of the functions in the pretest_validation_functions.py file)
   * 'args' : kwargs for the function specifying various parameters like the sync line labels and QC criteria
-  * 'data_stream' : which data stream this function validates (sync file, pkl file, behavior video etc)
+  * 'data_stream' : which data stream to pass to this function (sync file, pkl file, behavior video etc)
   * 'output_name' : the name under which the results from this function will appear in the final results.json
   
 Check out the example_make_params_json.py to see how this is formatted more clearly.
