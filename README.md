@@ -6,7 +6,9 @@ Dependencies:
   * json
   * h5py  
 
-The validation functions can be run from the command line:
+pretest_validation_functions.py contains all the actual validation functions. 
+
+They can be run together with run_validation_functions.py from the command line:
 ```
 python run_validation_functions.py params.json results.json
 ```
