@@ -15,7 +15,7 @@ params = {  'file_paths': {
                     'FACE_CAM_VID_PATH' : r"Z:\pretest\Face_2020T124851.avi"},
             'functions_to_run' : [
                     {'function': 'validate_stim_vsyncs',    'args': {'line_label': 'stim_vsync','tolerance': 1, 'vsync_framerate':60}, 'data_stream': 'sync', 'output_name' : 'vsyncs'},
-                    {'function': 'validate_barcode_syncs',  'args': {'line_label': 'barcode', 'min_edges':10}, 'data_stream': 'sync', 'output_name' : 'barcodes'},
+                    {'function': 'validate_barcode_syncs',  'args': {'line_label': 'barcode', 'min_edges': 5}, 'data_stream': 'sync', 'output_name' : 'barcodes'},
                     {'function': 'validate_cam_syncs',      'args': {'line_label': 'cam1_exposure', 'framerate': 60, 'tolerance': 2}, 'data_stream': 'sync', 'output_name' : 'cam1_syncs'},
                     {'function': 'validate_cam_syncs',      'args': {'line_label': 'cam2_exposure', 'framerate': 60, 'tolerance': 2}, 'data_stream': 'sync', 'output_name' : 'cam2_syncs'},
                     {'function': 'validate_cam_syncs',      'args': {'line_label': 'Face_Exposure', 'framerate': 60, 'tolerance': 2}, 'data_stream': 'sync', 'output_name' : 'facecam_syncs'},
