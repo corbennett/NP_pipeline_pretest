@@ -11,8 +11,8 @@ The validation functions can be run from the command line:
 python run_validation_functions.py params.json results.json
 ```
 **params.json** should contain the following fields:
-* 'file_paths' : dictionary specifying paths to the data streams required for QC (sync file, pkl file, behavior videos etc)
-* 'functions_to_run': list containing a dictionary for every QC function that should be run on pretest data. These dictionaries contain the following keys:
+* 'file_paths' : dictionary specifying paths to the data streams required for validation (sync file, pkl file, behavior videos etc)
+* 'functions_to_run': list containing a dictionary for every validation function that should be run on pretest data. These dictionaries contain the following keys:
   * 'function': name of function to run (should be one of the functions in the pretest_validation_functions.py file)
   * 'args' : kwargs for the function specifying various parameters like the sync line labels and QC criteria
   * 'data_stream' : which data stream this function validates (sync file, pkl file, behavior video etc)
