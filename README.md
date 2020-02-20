@@ -1,6 +1,5 @@
 # NP_pipeline_pretest
-Validation functions to run after the pretest on NP pipeline rigs to verify that all data streams are being collected. The pretest should output a sync file (hdf5) and a pkl file (DOC format). 
-
+Validation functions to run after the pretest on NP pipeline rigs to verify that all data streams are being collected. 
 Dependencies: 
   * numpy
   * pandas
@@ -9,21 +8,21 @@ Dependencies:
 
 The validation functions can be run from the command line:
 ```
-python run_validation_functions.py path_to_json_params path_to_results_save_file
+python run_validation_functions.py params.json results.json
 ```
+**params.json** should contain the following fields:
+* 'file_paths' : dictionary specifying paths to the data streams required for validation (sync file, pkl file, behavior videos etc)
+* 'functions_to_run': list containing a dictionary for every validation function that should be run on pretest data. These dictionaries contain the following keys:
+  * 'function': name of function to run (should be one of the functions in the pretest_validation_functions.py file)
+  * 'args' : kwargs for the function specifying various parameters like the sync line labels and QC criteria
+  * 'data_stream' : which data stream to pass to this function (sync file, pkl file, behavior video etc)
+  * 'output_name' : the name under which the results from this function will appear in the final results.json
+  
+Check out the example_make_params_json.py to see how this is formatted more clearly.
 
-The params file includes:
-1. path to sync file
-2. path to pkl file
-3. list of QC functions to run along with their respective criteria
-4. relevant line labels for sync
+**results.json** will contain the outputs from these validation functions. The file will specify which validation functions were called and whether they passed (1) or failed (0).
 
-
-Check out the example to see how this is formatted.
-
-The output is a json file saved to the path specified by the second command line argument. The file will specify which validation functions were called and whether they passed (1) or failed (0).
-
-I've also included a short pretest camstim script (example_DOC_short) that outputs the right pkl file format.
+I've also included a short pretest camstim script (example_DOC_short) that outputs the right pkl file format and can be used for the pretest.
 
 
 
