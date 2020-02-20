@@ -1,6 +1,5 @@
 # NP_pipeline_pretest
-Validation functions to run after the pretest on NP pipeline rigs to verify that all data streams are being collected. The pretest should output a sync file (hdf5) and a pkl file (DOC format). 
-
+Validation functions to run after the pretest on NP pipeline rigs to verify that all data streams are being collected. 
 Dependencies: 
   * numpy
   * pandas
