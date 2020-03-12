@@ -15,12 +15,15 @@ def main(argv):
     
     with open(argv[1]) as json_params:
         params = json.load(json_params)
-        
+    
+    with open(argv[2]) as json_params:
+        file_paths = json.load(json_params)
+    
 #    with open(r"Z:\pretest\params.json") as json_params:
 #        params = json.load(json_params)
     
-    syncDataset = Dataset(params['file_paths']['SYNC_FILE_PATH'])
-    pklData = pd.read_pickle(params['file_paths']['PKL_FILE_PATH'])
+    syncDataset = Dataset(file_paths['file_paths']['SYNC_FILE_PATH'])
+    pklData = pd.read_pickle(file_paths['file_paths']['PKL_FILE_PATH'])
     
     datastream_dict = {'sync' : syncDataset,
                        'pkl' : pklData}
@@ -35,13 +38,14 @@ def main(argv):
         datastream = datastream_dict[func_dict['data_stream']]
         
         func = getattr(pretest_validation_functions, func_name)
+        val, outcome_bool = func(datastream, **kwargs)
+        validation_results[output_name] = {'value': val, 'success': int(outcome_bool)}
         
-        validation_results[output_name] = int(func(datastream, **kwargs))
     
     
     
     
-    save_path= argv[2]
+    save_path= argv[3]
     with open(save_path, 'w') as out:
         json.dump(validation_results, out, indent=2)
     
