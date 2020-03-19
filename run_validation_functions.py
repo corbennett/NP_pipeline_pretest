@@ -22,8 +22,8 @@ def main(argv):
 #    with open(r"Z:\pretest\params.json") as json_params:
 #        params = json.load(json_params)
     
-    syncDataset = Dataset(file_paths['file_paths']['SYNC_FILE_PATH'])
-    pklData = pd.read_pickle(file_paths['file_paths']['PKL_FILE_PATH'])
+    syncDataset = Dataset(file_paths['file_paths']["synchronization_data"])
+    pklData = pd.read_pickle(file_paths['file_paths']["behavior_stimulus"])
     
     datastream_dict = {'sync' : syncDataset,
                        'pkl' : pklData}
