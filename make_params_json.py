@@ -9,13 +9,78 @@ import os
 
 params = {  
             'functions_to_run' : [
-                    {'function': 'validate_stim_vsyncs',    'args': {'line_label': 'stim_vsync','tolerance': 1, 'vsync_framerate':60}, 'data_stream': 'sync', 'output_name' : 'vsyncs'},
-                    {'function': 'validate_barcode_syncs',  'args': {'line_label': 'barcode', 'min_edges': 5}, 'data_stream': 'sync', 'output_name' : 'barcodes'},
-                    {'function': 'validate_cam_syncs',      'args': {'line_label': 'cam1_exposure', 'framerate': 60, 'tolerance': 2}, 'data_stream': 'sync', 'output_name' : 'cam1_syncs'},
-                    {'function': 'validate_cam_syncs',      'args': {'line_label': 'cam2_exposure', 'framerate': 60, 'tolerance': 2}, 'data_stream': 'sync', 'output_name' : 'cam2_syncs'},
-                    {'function': 'validate_cam_syncs',      'args': {'line_label': 'Face_Exposure', 'framerate': 60, 'tolerance': 2}, 'data_stream': 'sync', 'output_name' : 'facecam_syncs'},
-                    {'function': 'validate_pkl_licks',      'args': {'min_lick_num': 5}, 'data_stream': 'pkl', 'output_name' : 'pkl_licks'},
-                    {'function': 'validate_pkl_wheel_data', 'args': {'min_wheel_rotations' : 2}, 'data_stream': 'pkl', 'output_name' : 'wheel'}]
+                    {
+                        'function': 'validate_stim_vsyncs',
+                        'args': {
+                            'line_label': 'stim_vsync',
+                            'tolerance': 1, 
+                            'criterion':60
+                        },
+                        'data_stream': 'sync',
+                        'output_name' : 'vsyncs',
+                        'criterion_descriptor': 'stimulus framerate'
+                    },
+                    {
+                        'function': 'validate_barcode_syncs',  
+                        'args': {
+                            'line_label': 'barcode',
+                            'criterion': 5
+                        }, 
+                        'data_stream': 'sync',
+                        'output_name' : 'barcodes',
+                        'criterion_descriptor': 'minumum open ephys barcode edges'
+                    },
+                    {
+                        'function': 'validate_cam_syncs',      
+                        'args': {
+                            'line_label': 'cam1_exposure', 
+                            'framerate': 60, 
+                            'criterion': 2
+                        }, 
+                        'data_stream': 'sync', 
+                        'output_name' : 'cam1_syncs',
+                        'criterion_descriptor': 'eye cam framerate'
+                    },
+                    {
+                        'function': 'validate_cam_syncs',      
+                        'args': {
+                            'line_label': 'cam2_exposure', 
+                            'criterion': 60, 
+                            'tolerance': 2
+                        }, 
+                        'data_stream': 'sync', 
+                        'output_name' : 'cam2_syncs',
+                        'criterion_descriptor': 'body cam framerate'
+                    },
+                    {
+                        'function': 'validate_cam_syncs',      
+                        'args': {
+                            'line_label': 'Face_Exposure', 
+                            'criterion': 60, 
+                            'tolerance': 2
+                        }, 
+                        'data_stream': 'sync', 
+                        'output_name' : 'facecam_syncs',
+                        'criterion_descriptor': 'face cam framerate'
+                    },
+                    {
+                        'function': 'validate_pkl_licks',      
+                        'args': {
+                            'criterion': 5
+                        }, 
+                        'data_stream': 'pkl', 
+                        'output_name': 'pkl_licks',
+                        'criterion_descriptor': 'minimum lick number'
+                    },
+                    {
+                        'function': 'validate_pkl_wheel_data',
+                        'args': {
+                            'criterion' : 2
+                        }, 
+                        'data_stream': 'pkl', 
+                        'output_name' : 'wheel',
+                        'criterion_descriptor': 'minimum wheel rotations'
+                    }]
           }
 
 ddir=r"\\w10DTSM18306\neuropixels_data\815201437_425599_20190130"

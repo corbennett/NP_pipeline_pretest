@@ -53,7 +53,7 @@ def get_sync_line_data(syncDataset, line_label):
     return rising, falling
 
 @validation_decorator
-def validate_stim_vsyncs(syncDataset, tolerance, line_label, vsync_framerate):
+def validate_stim_vsyncs(syncDataset, tolerance, line_label, criterion):
     ''' Validate that the sync box is getting 60 Hz signal from stim computer
         Confirms that vsync_rate is within tolerance of 60 Hz'''
     
@@ -63,7 +63,7 @@ def validate_stim_vsyncs(syncDataset, tolerance, line_label, vsync_framerate):
     return vsync_rate, (vsync_framerate-tolerance)<vsync_rate<(vsync_framerate+tolerance)
 
 @validation_decorator    
-def validate_barcode_syncs(syncDataset, min_edges, line_label):
+def validate_barcode_syncs(syncDataset, criterion, line_label):
     ''' Validate that sync box is getting barcodes. Looks for at least min_barcode_num '''
     
     r, f = get_sync_line_data(syncDataset, line_label)
@@ -71,7 +71,7 @@ def validate_barcode_syncs(syncDataset, min_edges, line_label):
     return len(f), len(f)>=min_edges
 
 @validation_decorator
-def validate_cam_syncs(syncDataset, framerate, tolerance, line_label):
+def validate_cam_syncs(syncDataset, criterion, tolerance, line_label):
     ''' Validate that camera is sending sync pulses within tolerance of designated framerate '''
     
     r, f = get_sync_line_data(syncDataset, line_label)
@@ -80,7 +80,7 @@ def validate_cam_syncs(syncDataset, framerate, tolerance, line_label):
     return cam_rate, (framerate-tolerance)<cam_rate<(framerate+tolerance)
 
 @validation_decorator
-def validate_pkl_licks(pklData, min_lick_num):
+def validate_pkl_licks(pklData, criterion):
     ''' Validate that pickle file has registered at least min_licks '''    
     
     licks = pklData['items']['behavior']['lick_sensors'][0]['lick_events']
@@ -88,7 +88,7 @@ def validate_pkl_licks(pklData, min_lick_num):
     return len(licks), len(licks)>= min_lick_num
 
 @validation_decorator
-def validate_pkl_wheel_data(pklData, min_wheel_rotations):
+def validate_pkl_wheel_data(pklData, criterion):
     ''' Validate that there's wheel data in the pkl file:
         Check to see that wheel spun more than min_wheel_rotations '''
     
