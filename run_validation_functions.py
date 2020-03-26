@@ -12,7 +12,7 @@ def main(argv):
     
     with open(argv[1]) as json_params:
         params = json.load(json_params)
-    
+
     with open(argv[2]) as json_params:
         file_paths = json.load(json_params)['file_paths']
     
