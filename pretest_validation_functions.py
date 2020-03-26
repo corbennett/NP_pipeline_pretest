@@ -7,8 +7,13 @@ Created on Fri Feb  7 12:37:51 2020
 
 import numpy as np
 import logging
-
+import pandas as pd
+from sync_dataset import Dataset
+import sys
+import json
+from run_validation_functions import main
 logging.root.setLevel(logging.DEBUG)
+
 
 def validation_decorator(validation_func):
     def wrapper(*args, **kwargs):
@@ -98,7 +103,25 @@ def validate_pkl_wheel_data(pklData, criterion):
     return num_rotations, num_rotations>=min_wheel_rotations
 
 
-    
+
+
+# The syntax here is picky - the function name needs to be get_+"lims_key"
+def get_synchronization_data(file_path)
+    syncDataset = Dataset(file_path)
+    return syncDataset
+
+
+
+def get_datastream_dict(file_paths):
+    pklData = pd.read_pickle(file_paths['file_paths']["behavior_stimulus"])
+    return pklData
+
+#for files that aren't really datastreams (should probably change nomenclature), mainly images that can't be loaded just check that the file extension is correct and return true
+
+
+
+if __name__ == "__main__":
+    main(sys.argv)   
     
     
     
