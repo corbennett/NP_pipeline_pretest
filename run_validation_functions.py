@@ -16,8 +16,6 @@ def main(argv):
     with open(argv[1]) as json_params:
         params = json.load(json_params)
         
-#    with open(r"Z:\pretest\params.json") as json_params:
-#        params = json.load(json_params)
     
     syncDataset = Dataset(params['file_paths']['SYNC_FILE_PATH'])
     pklData = pd.read_pickle(params['file_paths']['PKL_FILE_PATH'])
