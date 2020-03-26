@@ -16,8 +16,9 @@ def validation_decorator(validation_func):
             out = validation_func(*args, **kwargs)
 
         except Exception as e:
+            logging.debug(validation_func.__name__)
             logging.debug(e)
-            out = False
+            out = None, False
         
         return out
     
@@ -52,49 +53,49 @@ def get_sync_line_data(syncDataset, line_label):
     return rising, falling
 
 @validation_decorator
-def validate_stim_vsyncs(syncDataset, tolerance, line_label, vsync_framerate):
+def validate_stim_vsyncs(syncDataset, tolerance, line_label, criterion):
     ''' Validate that the sync box is getting 60 Hz signal from stim computer
         Confirms that vsync_rate is within tolerance of 60 Hz'''
     
     vsyncs_rising, vsyncs_falling = get_sync_line_data(syncDataset, line_label)
     vsync_rate = 1/(np.median(np.diff(vsyncs_falling)))
     
-    return (vsync_framerate-tolerance)<vsync_rate<(vsync_framerate+tolerance)
+    return vsync_rate, (vsync_framerate-tolerance)<vsync_rate<(vsync_framerate+tolerance)
 
 @validation_decorator    
-def validate_barcode_syncs(syncDataset, min_edges, line_label):
+def validate_barcode_syncs(syncDataset, criterion, line_label):
     ''' Validate that sync box is getting barcodes. Looks for at least min_barcode_num '''
     
     r, f = get_sync_line_data(syncDataset, line_label)
-   
-    return len(f)>=min_edges
+    logging.warning('num barcodes: ' + str(len(f)))
+    return len(f), len(f)>=min_edges
 
 @validation_decorator
-def validate_cam_syncs(syncDataset, framerate, tolerance, line_label):
+def validate_cam_syncs(syncDataset, criterion, tolerance, line_label):
     ''' Validate that camera is sending sync pulses within tolerance of designated framerate '''
     
     r, f = get_sync_line_data(syncDataset, line_label)
     cam_rate = 1/np.median(np.diff(f))
-    
-    return (framerate-tolerance)<cam_rate<(framerate+tolerance)
+    logging.warning('cam rate: ' + str(cam_rate))
+    return cam_rate, (framerate-tolerance)<cam_rate<(framerate+tolerance)
 
 @validation_decorator
-def validate_pkl_licks(pklData, min_lick_num):
+def validate_pkl_licks(pklData, criterion):
     ''' Validate that pickle file has registered at least min_licks '''    
     
     licks = pklData['items']['behavior']['lick_sensors'][0]['lick_events']
-
-    return len(licks)>= min_lick_num
+    logging.warning('num licks: ' + str(len(licks)))
+    return len(licks), len(licks)>= min_lick_num
 
 @validation_decorator
-def validate_pkl_wheel_data(pklData, min_wheel_rotations):
+def validate_pkl_wheel_data(pklData, criterion):
     ''' Validate that there's wheel data in the pkl file:
         Check to see that wheel spun more than min_wheel_rotations '''
     
     dx = pklData['items']['behavior']['encoders'][0]['dx']
     num_rotations = np.sum(dx)/360.  # wheel rotations
-    
-    return num_rotations>=min_wheel_rotations
+    logging.warning('wheel rotations: ' + str(num_rotations))
+    return num_rotations, num_rotations>=min_wheel_rotations
 
 
     
