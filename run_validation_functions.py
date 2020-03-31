@@ -32,23 +32,24 @@ def main(argv):
     datastream_dict = {}
     for datastream_name in datastream_set:
         print(f'Validating existance of datastream: {datastream_name}')
+        datastream_name_out = datastream_name+'_found'
         if not(datastream_name in file_paths):
-            validation_results[datastream_name] = {'value': False, 'success': 0, 'result string': f"Path for {datastream_name} was not found in params json, {argv[2]}"}
+            validation_results[datastream_name_out] = {'value': False, 'success': 0, 'result string': f"Path for {datastream_name} was not found in params json, {argv[2]}"}
         else:
             datastream_path = file_paths[datastream_name]
             if not(os.path.exists(datastream_path)):
-                validation_results[datastream_name] = {'value': False, 'success': 0, 'result string': f"File for {datastream_name} was not found at {datastream_path}"}
+                validation_results[datastream_name_out] = {'value': False, 'success': 0, 'result string': f"File for {datastream_name} was not found at {datastream_path}"}
             else:
                 try:
                     getter_func =  getattr(validation_functions, datastream_name)
                     datastream_dict[datastream_name] = getter_func(datastream_path)
-                    validation_results[datastream_name] = {'value': True, 'success': 1, 'result string': f"Sucessfully retrieved data for {datastream_name}"}
+                    validation_results[datastream_name_out] = {'value': True, 'success': 1, 'result string': f"Sucessfully retrieved data for {datastream_name}"}
                 except Exception as E:
                     logging.exception(E)
                     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                     message = template.format(type(E).__name__, E.args)
                     print(message)
-                    validation_results[datastream_name] = {'value': False, 'success': 0, 'result string': f"Failed to retrive data for {datastream_name} found at {datastream_path}: {message}"}
+                    validation_results[datastream_name_out] = {'value': False, 'success': 0, 'result string': f"Failed to retrive data for {datastream_name} found at {datastream_path}: {message}"}
 
     #### Run validation functions ####
 

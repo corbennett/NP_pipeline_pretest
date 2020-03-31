@@ -1,0 +1,98 @@
+{
+  "functions_to_run": [
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "stim_vsync",
+        "tolerance": 1,
+        "criterion": 60
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "barcodes",
+        "criterion": 5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "cam1_exposure",
+        "criterion": 60,
+        "tolerance": 2,
+        "criterion_descriptor": "eye cam framerate"
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "cam2_exposure",
+        "criterion": 60,
+        "criterion_descriptor": "body cam framerate",
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "Face_Exposure",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "lick_events",
+        "criterion": 5
+      },
+      "data_streams": [
+        "behavior_stimulus"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "wheel_rotations",
+        "criterion": 2
+      },
+      "data_streams": [
+        "behavior_stimulus"
+      ]
+    },
+    {
+      "function": "validate_file_size",
+      "args": {
+        "min_file_size": 1
+      },
+      "data_streams": [
+        "behavior_tracking"
+      ]
+    },
+    {
+      "function": "validate_file_size",
+      "args": {
+        "min_file_size": 1
+      },
+      "data_streams": [
+        "eye_tracking"
+      ]
+    }
+  ]
+}
