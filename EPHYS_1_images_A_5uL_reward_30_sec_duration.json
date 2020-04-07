@@ -1,0 +1,47 @@
+{
+    "agent_socket": "127.0.0.1:5000",
+    "auto_reward_delay": 0.15,
+    "auto_reward_vol": 0.005,
+    "catch_frequency": null,
+    "change_flashes_max": 12,
+    "change_flashes_min": 4,
+    "change_time_dist": "geometric",
+    "change_time_scale": 0.3,
+    "end_after_response": true,
+    "end_after_response_sec": 3.5,
+    "failure_repeats": 5,
+    "flash_omit_probability": 0.05,
+    "free_reward_trials": 10000,
+    "mapping": {
+        "flash_path": "//allen/programs/braintv/workgroups/nc-ophys/1022/replay-stim/flash_250ms.stim",
+        "gabor_path": "//allen/programs/braintv/workgroups/nc-ophys/1022/replay-stim/gabor_20_deg_250ms.stim"
+    },
+    "max_task_duration_min": 0.5,
+    "min_no_lick_time": 0.0,
+    "mouse_id": "366122",
+    "output_dir": "C:/ProgramData/camstim/output",
+    "periodic_flash": [
+        0.25,
+        0.5
+    ],
+    "pre_change_time": 0.0,
+    "response_window": [
+        0.15,
+        0.75
+    ],
+    "reward_volume": 0.005,
+    "stage": "EPHYS_1_images_A_5uL_reward_75_min_duration",
+    "stimulus": {
+        "class": "images",
+        "params": {
+            "image_set": "//allen/programs/braintv/workgroups/nc-ophys/visual_behavior/image_dictionaries/Natural_Images_Lum_Matched_set_training_2017.07.14.pkl",
+            "sampling": "even"
+        }
+    },
+    "stimulus_window": 6.0,
+    "task_id": "DoC",
+    "timeout_duration": 0.3,
+    "user_id": "greggh",
+    "volume_limit": 5.0,
+    "warm_up_trials": 3
+}
