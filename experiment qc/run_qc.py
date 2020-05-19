@@ -17,9 +17,10 @@ from matplotlib import pyplot as plt
 import analysis
 import probeSync_qc as probeSync
 import scipy.signal
+import cv2
 
 ### SPECIFY LIMS EXPERIMENT TO PULL ####
-lims_ecephys_id = '1007083115'
+lims_ecephys_id = '1013651431'
 
 
 ### CONNECT TO LIMS AND GET PATHS TO DATA FOR THIS EXPERIMENT ####
@@ -69,7 +70,23 @@ QRY = '''
     GROUP BY es.id, sp.external_specimen_name, u.login, e.name, p.code, isi.id, bs.storage_directory
     '''
 
-cursor.execute(QRY.format('1007083115'))
+WKF_QRY = '''
+    SELECT es.id AS es_id, 
+        es.name AS es, 
+        ep.name AS ep, 
+        ep.id AS ep_id, 
+        wkft.name AS wkft, 
+        wkf.storage_directory || wkf.filename AS wkf_path
+    FROM ecephys_sessions es
+        JOIN ecephys_probes ep ON ep.ecephys_session_id=es.id
+        LEFT JOIN well_known_files wkf ON wkf.attachable_id = ep.id
+        LEFT JOIN well_known_file_types wkft ON wkft.id=wkf.well_known_file_type_id
+    WHERE es.id ={} 
+    ORDER BY es.id, ep.name;
+    '''
+
+
+cursor.execute(QRY.format(lims_ecephys_id))
 exp_data = cursor.fetchall()[-1]
 print(exp_data)
 
@@ -194,13 +211,16 @@ for p in probe_dirs:
 
 ### PLOT POPULATION RF FOR EACH PROBE ###
 flatten = lambda l: [item[0] for sublist in l for item in sublist]
-num_channels_to_take_from_top = 100
+ctx_units_percentile = 66 #defines what fraction of units we should assume are cortical (taken from top of probe)
 for p in probe_dict:
     u_df = probe_dict[p]
     good_units = u_df[(u_df['quality']=='good')&(u_df['snr']>1)]
-    max_chan = good_units['peak_channel'].max()
+    #max_chan = good_units['peak_channel'].max()
     # take spikes from the top n channels as proxy for cortex
-    spikes = good_units.loc[good_units['peak_channel']>max_chan-num_channels_to_take_from_top]['times']
+    #spikes = good_units.loc[good_units['peak_channel']>max_chan-num_channels_to_take_from_top]['times']
+    #take spikes from top third of units
+    ctx_bottom_chan = np.percentile(good_units['peak_channel'], ctx_units_percentile)
+    spikes = good_units.loc[good_units['peak_channel']>ctx_bottom_chan]['times']
     rmats = []
     for s in spikes:
         rmat = analysis.plot_rf(mapping_data, s.flatten(), behavior_frame_count, FRAME_APPEAR_TIMES)
@@ -237,9 +257,11 @@ postTime = 0.55
 for p in probe_dict:
     u_df = probe_dict[p]
     good_units = u_df[(u_df['quality']=='good')&(u_df['snr']>1)]
-    max_chan = good_units['peak_channel'].max()
-    # take spikes from the top n channels as proxy for cortex
-    spikes = good_units.loc[good_units['peak_channel']>max_chan-num_channels_to_take_from_top]['times']
+#    max_chan = good_units['peak_channel'].max()
+#    # take spikes from the top n channels as proxy for cortex
+#    spikes = good_units.loc[good_units['peak_channel']>max_chan-num_channels_to_take_from_top]['times']
+    ctx_bottom_chan = np.percentile(good_units['peak_channel'], ctx_units_percentile)
+    spikes = good_units.loc[good_units['peak_channel']>ctx_bottom_chan]['times']
     sdfs = [[],[]]
     for s in spikes:
         s = s.flatten()
@@ -353,7 +375,31 @@ for p in probe_dict:
     fig.savefig(os.path.join(FIG_SAVE_DIR, 'Probe' + p + ' spike histogram'))
     
 ### frames from videos ###
+def get_video_file(glob_string, directory):
+    paths = glob.glob(os.path.join(directory, glob_string))
+    if len(paths)>0:
+        return paths[-1]
+    else:
+        return None
     
+BODY_VID_FILE = get_video_file('*behavior*.avi', sync_pkl_dir)
+EYE_VID_FILE = get_video_file('*eye*.avi', sync_pkl_dir)
+FACE_VID_FILE = get_video_file('*face*.avi', sync_pkl_dir)
+
+vids = [v for v in [BODY_VID_FILE, EYE_VID_FILE, FACE_VID_FILE] if v is not None]
+fig, axes = plt.subplots(len(vids), 3)
+for iv, vid in enumerate(vids):
+    v = cv2.VideoCapture(vid)
+    total_frames = v.get(cv2.CAP_PROP_FRAME_COUNT)
+    
+    for 
+        
+        
+        
+        
+        
+        
+        
 ### unit quantification ###
 
 ###
