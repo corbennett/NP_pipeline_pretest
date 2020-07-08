@@ -249,7 +249,7 @@ class Video(Datastream):
     def load_datastream(self, file_path):
         """"Return the loaded data stream from the filepath """
         extension = os.path.splitext(file_path)[1]
-        assert(extension == '.avi') 
+        assert((extension == '.mp4') or (extension == '.avi')) 
 
 
 
