@@ -3,7 +3,7 @@
     {
       "function": "validate_data_subtype",
       "args": {
-        "data_label": "stim_vsync",
+        "data_label": "vsync_stim",
         "tolerance": 1,
         "criterion": 60
       },
@@ -14,7 +14,28 @@
     {
       "function": "validate_data_subtype",
       "args": {
-        "data_label": "barcodes",
+        "data_label": "stim_photodiode",
+        "tolerance": 0.6,
+        "criterion": 1
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "stim_running",
+        "criterion": 2.5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "stim_trial_opto",
         "criterion": 5
       },
       "data_streams": [
@@ -24,10 +45,8 @@
     {
       "function": "validate_data_subtype",
       "args": {
-        "data_label": "cam1_exposure",
-        "criterion": 60,
-        "tolerance": 2,
-        "criterion_descriptor": "eye cam framerate"
+        "data_label": "stim_running_opto",
+        "criterion": 0.5
       },
       "data_streams": [
         "synchronization_data"
@@ -36,9 +55,18 @@
     {
       "function": "validate_data_subtype",
       "args": {
-        "data_label": "cam2_exposure",
+        "data_label": "barcode_ephys",
+        "criterion": 5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "beh_frame_received",
         "criterion": 60,
-        "criterion_descriptor": "body cam framerate",
         "tolerance": 2
       },
       "data_streams": [
@@ -48,9 +76,96 @@
     {
       "function": "validate_data_subtype",
       "args": {
-        "data_label": "Face_Exposure",
+        "data_label": "eye_frame_received",
         "criterion": 60,
         "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "face_frame_received",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "beh_cam_frame_readout",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "eye_cam_frame_readout",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "face_cam_frame_readout",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "beh_cam_exposing",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "eye_cam_exposing",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "face_cam_exposing",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "lick_sensor",
+        "criterion": 5
       },
       "data_streams": [
         "synchronization_data"
@@ -74,24 +189,6 @@
       },
       "data_streams": [
         "behavior_stimulus"
-      ]
-    },
-    {
-      "function": "validate_file_size",
-      "args": {
-        "min_file_size": 1
-      },
-      "data_streams": [
-        "behavior_tracking"
-      ]
-    },
-    {
-      "function": "validate_file_size",
-      "args": {
-        "min_file_size": 1
-      },
-      "data_streams": [
-        "eye_tracking"
       ]
     }
   ]
