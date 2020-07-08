@@ -106,7 +106,7 @@ def lickTriggeredLFP(lick_times, lfp, lfp_time, agarChRange=None, num_licks=20, 
        lickTriggeredAv[il, :, :] = lfp[li-samplesBefore:li+samplesAfter] 
 
 
-    m = np.nanmean(lickTriggeredAv, axis=0)
+    m = np.nanmean(lickTriggeredAv, axis=0)*0.195  #convert to uV
     mtime = np.linspace(-windowBefore, windowAfter, m.size)  
     return m, mtime, first_lick_times
 

@@ -24,10 +24,11 @@ def getUnitData(probeBase,syncDataset):
     print(probeSpikeDir)
     
     #Get barcodes from sync file
-    if 'barcode' in syncDataset.line_labels:
-        bRising, bFalling = get_sync_line_data(syncDataset, 'barcode')
-    elif 'barcodes' in syncDataset.line_labels:
-        bRising, bFalling = get_sync_line_data(syncDataset, 'barcodes')
+#    if 'barcode' in syncDataset.line_labels:
+#        bRising, bFalling = get_sync_line_data(syncDataset, 'barcode')
+#    elif 'barcodes' in syncDataset.line_labels:
+#        bRising, bFalling = get_sync_line_data(syncDataset, 'barcodes')
+    bRising, bFalling = get_sync_line_data(syncDataset, channel=0)
     bs_t, bs = ecephys.extract_barcodes_from_times(bRising, bFalling)
     
     channel_states = np.load(os.path.join(probeTTLDir, 'channel_states.npy'))
@@ -155,10 +156,11 @@ def getLFPData(probeBase, syncDataset, num_channels=384):
         
     
     #Get barcodes from sync file
-    if 'barcode' in syncDataset.line_labels:
-        bRising, bFalling = get_sync_line_data(syncDataset, 'barcode')
-    elif 'barcodes' in syncDataset.line_labels:
-        bRising, bFalling = get_sync_line_data(syncDataset, 'barcodes')
+#    if 'barcode' in syncDataset.line_labels:
+#        bRising, bFalling = get_sync_line_data(syncDataset, 'barcode')
+#    elif 'barcodes' in syncDataset.line_labels:
+#        bRising, bFalling = get_sync_line_data(syncDataset, 'barcodes')
+    bRising, bFalling = get_sync_line_data(syncDataset, channel=0)
     bs_t, bs = ecephys.extract_barcodes_from_times(bRising, bFalling)
     
     channel_states = np.load(os.path.join(probeTTLDir, 'channel_states.npy'))
