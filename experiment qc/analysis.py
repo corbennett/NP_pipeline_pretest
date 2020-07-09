@@ -7,7 +7,7 @@ Created on Sat Feb 22 14:18:35 2020
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from numba import njit
+#from numba import njit
  
 
 def find_spikes_per_trial(spikes, trial_starts, trial_ends):
@@ -16,22 +16,22 @@ def find_spikes_per_trial(spikes, trial_starts, trial_ends):
     
     return teinds - tsinds
 
-@njit     
-def makePSTH_numba(spikes, startTimes, windowDur, binSize=0.001, convolution_kernel=0.05, avg=True):
-    spikes = spikes.flatten()
-    startTimes = startTimes - convolution_kernel/2
-    windowDur = windowDur + convolution_kernel
-    bins = np.arange(0,windowDur+binSize,binSize)
-    convkernel = np.ones(int(convolution_kernel/binSize))
-    counts = np.zeros(bins.size-1)
-    for i,start in enumerate(startTimes):
-        startInd = np.searchsorted(spikes, start)
-        endInd = np.searchsorted(spikes, start+windowDur)
-        counts = counts + np.histogram(spikes[startInd:endInd]-start, bins)[0]
+# @njit     
+# def makePSTH_numba(spikes, startTimes, windowDur, binSize=0.001, convolution_kernel=0.05, avg=True):
+#     spikes = spikes.flatten()
+#     startTimes = startTimes - convolution_kernel/2
+#     windowDur = windowDur + convolution_kernel
+#     bins = np.arange(0,windowDur+binSize,binSize)
+#     convkernel = np.ones(int(convolution_kernel/binSize))
+#     counts = np.zeros(bins.size-1)
+#     for i,start in enumerate(startTimes):
+#         startInd = np.searchsorted(spikes, start)
+#         endInd = np.searchsorted(spikes, start+windowDur)
+#         counts = counts + np.histogram(spikes[startInd:endInd]-start, bins)[0]
     
-    counts = counts/startTimes.size
-    counts = np.convolve(counts, convkernel)/(binSize*convkernel.size)
-    return counts[convkernel.size-1:-convkernel.size], bins[:-convkernel.size-1]
+#     counts = counts/startTimes.size
+#     counts = np.convolve(counts, convkernel)/(binSize*convkernel.size)
+#     return counts[convkernel.size-1:-convkernel.size], bins[:-convkernel.size-1]
 
 def makePSTH(spikes,startTimes,windowDur,binSize=0.01, avg=True):
     bins = np.arange(0,windowDur+binSize,binSize)

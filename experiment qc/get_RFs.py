@@ -6,13 +6,16 @@ Created on Sat Feb 22 12:15:38 2020
 """
 import numpy as np
 import os
-from visual_behavior.ophys.sync import sync_dataset
+#from visual_behavior.ophys.sync import sync_dataset
 import pandas as pd
 from matplotlib import pyplot as plt
 import analysis
 import probeSync_qc as probeSync
 import data_getters
 import logging
+import sys
+sys.path.append("..")
+from sync_dataset import Dataset as sync_dataset
 
 ### SPECIFY EXPERIMENT TO PULL ####
 #the local base directory
@@ -32,8 +35,9 @@ SYNC_FILE = paths['sync_file']
 BEHAVIOR_PKL = paths['behavior_pkl']
 REPLAY_PKL = paths['replay_pkl']
 MAPPING_PKL = paths['mapping_pkl']
-syncDataset = sync_dataset.Dataset(SYNC_FILE)
+syncDataset = sync_dataset(SYNC_FILE)
 
+print('Grabbing pkl data')
 for f,s in zip([SYNC_FILE, BEHAVIOR_PKL, REPLAY_PKL, MAPPING_PKL], ['sync: ', 'behavior: ', 'replay: ', 'mapping: ']):
     print(s)
     print(f)

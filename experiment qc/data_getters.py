@@ -11,7 +11,6 @@ import os, glob, shutil
 from visual_behavior.visualization.extended_trials.daily import make_daily_figure
 from visual_behavior.translator.core import create_extended_dataframe
 from visual_behavior.translator.foraging2 import data_to_change_detection_core
-from visual_behavior.ophys.sync import sync_dataset
 import visual_behavior
 import pandas as pd
 import probeSync_qc as probeSync
