@@ -19,7 +19,9 @@ from sync_dataset import Dataset as sync_dataset
 
 ### SPECIFY EXPERIMENT TO PULL ####
 #the local base directory
-identifier = r'\\10.128.50.43\sd6.3\1033387557_509940_20200630'
+# identifier = r'\\10.128.50.43\sd6.3\1033387557_509940_20200630'
+identifier = sys.argv[1]
+print(identifier)
 
 d = data_getters.local_data_getter(base_dir=identifier)
 paths = d.data_dict
@@ -63,6 +65,8 @@ total_pkl_frames = (behavior_frame_count +
                     replay_frame_count) 
 print('frames in pkl files: {}'.format(total_pkl_frames))
 print('frames in sync file: {}'.format(len(vf)))
+
+assert(total_pkl_frames==len(vf))
 
 #%%
 ### GET UNIT METRICS AND BUILD UNIT TABLE ###
