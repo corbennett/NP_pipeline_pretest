@@ -442,8 +442,9 @@ class Video(Datastream):
 
     def load_datastream(self):
         """"Return the loaded data stream from the filepath """
-        extension = os.path.splitext(self.file_path)[1] #when we load from lims we are going to have to try to open them instead
-        assert((extension == '.avi') or  (extension == '.avi'))
+        extension = os.path.splitext(file_path)[1]
+        assert((extension == '.mp4') or (extension == '.avi')) 
+
 
 
 class behavior_tracking(Video):

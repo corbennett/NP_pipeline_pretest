@@ -6,7 +6,7 @@ Created on Sat Feb 22 12:15:38 2020
 """
 import numpy as np
 import os
-from visual_behavior.ophys.sync import sync_dataset
+#from visual_behavior.ophys.sync import sync_dataset
 import pandas as pd
 from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -14,10 +14,14 @@ import analysis
 import probeSync_qc as probeSync
 import data_getters
 import logging
+import sys
+sys.path.append("..")
+from sync_dataset import Dataset as sync_dataset
 
 ### SPECIFY EXPERIMENT TO PULL ####
 #the local base directory
-identifier = r'\\10.128.50.43\sd6.3\1034912109_512913_20200708'
+identifier = sys.argv[1]
+print(identifier)
 
 d = data_getters.local_data_getter(base_dir=identifier)
 paths = d.data_dict
@@ -33,8 +37,9 @@ SYNC_FILE = paths['sync_file']
 BEHAVIOR_PKL = paths['behavior_pkl']
 REPLAY_PKL = paths['replay_pkl']
 MAPPING_PKL = paths['mapping_pkl']
-syncDataset = sync_dataset.Dataset(SYNC_FILE)
+syncDataset = sync_dataset(SYNC_FILE)
 
+print('Grabbing pkl data')
 for f,s in zip([SYNC_FILE, BEHAVIOR_PKL, REPLAY_PKL, MAPPING_PKL], ['sync: ', 'behavior: ', 'replay: ', 'mapping: ']):
     print(s)
     print(f)
@@ -60,6 +65,8 @@ total_pkl_frames = (behavior_frame_count +
                     replay_frame_count) 
 print('frames in pkl files: {}'.format(total_pkl_frames))
 print('frames in sync file: {}'.format(len(vf)))
+
+assert(total_pkl_frames==len(vf))
 
 #%%
 ### GET UNIT METRICS AND BUILD UNIT TABLE ###

@@ -1,0 +1,195 @@
+{
+  "functions_to_run": [
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "vsync_stim",
+        "tolerance": 1,
+        "criterion": 60
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "stim_photodiode",
+        "tolerance": 0.6,
+        "criterion": 1
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "stim_running",
+        "criterion": 2.5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "stim_trial_opto",
+        "criterion": 5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "stim_running_opto",
+        "criterion": 0.5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "barcode_ephys",
+        "criterion": 5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "beh_frame_received",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "eye_frame_received",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "face_frame_received",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "beh_cam_frame_readout",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "eye_cam_frame_readout",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "face_cam_frame_readout",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "beh_cam_exposing",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "eye_cam_exposing",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "face_cam_exposing",
+        "criterion": 60,
+        "tolerance": 2
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "lick_sensor",
+        "criterion": 5
+      },
+      "data_streams": [
+        "synchronization_data"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "lick_events",
+        "criterion": 5
+      },
+      "data_streams": [
+        "behavior_stimulus"
+      ]
+    },
+    {
+      "function": "validate_data_subtype",
+      "args": {
+        "data_label": "wheel_rotations",
+        "criterion": 2
+      },
+      "data_streams": [
+        "behavior_stimulus"
+      ]
+    }
+  ]
+}
