@@ -9,6 +9,7 @@ import os
 from visual_behavior.ophys.sync import sync_dataset
 import pandas as pd
 from matplotlib import pyplot as plt
+import matplotlib.gridspec as gridspec
 import analysis
 import probeSync_qc as probeSync
 import data_getters
@@ -16,7 +17,7 @@ import logging
 
 ### SPECIFY EXPERIMENT TO PULL ####
 #the local base directory
-identifier = r'\\10.128.50.43\sd6.3\1033387557_509940_20200630'
+identifier = r'\\10.128.50.43\sd6.3\1034912109_512913_20200708'
 
 d = data_getters.local_data_getter(base_dir=identifier)
 paths = d.data_dict
@@ -112,10 +113,39 @@ for p in probe_dict:
         rmats_normed_mean = np.nanmean(rmats, axis=0)
      
         # plot population RF
-        fig, ax = plt.subplots()
-        title = p + ' population RF'
-        fig.suptitle(title)
-        ax.imshow(np.mean(rmats_normed_mean, axis=2), origin='lower')
+#        fig, ax = plt.subplots()
+#        title = p + ' population RF'
+#        fig.suptitle(title)
+#        ax.imshow(np.mean(rmats_normed_mean, axis=2), origin='lower')
+        
+        fig = plt.figure(constrained_layout=True, figsize=[6,6])
+        title = p + ' population RF cb'
+        fig.suptitle(title, color='w')
+        
+        nrows, ncols = 10,10
+        gs = gridspec.GridSpec(ncols=ncols, nrows=nrows, figure=fig)
+        
+        ax1 = fig.add_subplot(gs[0:nrows-1, 0:ncols-1])
+        ax2 = fig.add_subplot(gs[0:nrows-1, ncols-1])
+        ax3 = fig.add_subplot(gs[nrows-1, 0:ncols-1])
+        
+        ax1.imshow(np.mean(rmats_normed_mean, axis=2), origin='lower')
+        ax1.set_xticks([],[])
+        ax1.set_yticks([],[])
+        
+        ax3.imshow(np.vstack((np.arange(-45, 46), np.arange(-45, 46))), cmap='jet', clim=[-60, 60])
+        ax3.set_xticks([0, 45, 90])
+        ax3.set_xticklabels([-45, 0, 45])
+        ax3.set_yticks([],[])
+        ax3.set_xlabel('Azimuth')
+        
+        ax2.imshow(np.hstack((np.arange(-45, 46)[:,None], np.arange(-45, 46)[:,None])), cmap='jet_r', clim=[-60, 60])
+        ax2.yaxis.tick_right()
+        ax2.set_yticks([0, 45, 90])
+        ax2.set_yticklabels([-45, 0, 45])
+        ax2.set_xticks([],[])
+        ax2.yaxis.set_label_position("right")
+        ax2.set_ylabel('Elevation', rotation=270)
         
         fig.savefig(os.path.join(FIG_SAVE_DIR, title + '.png'))
     

@@ -19,12 +19,13 @@ import probeSync_qc as probeSync
 import scipy.signal
 import cv2
 import data_getters
+import logging 
 
 ### SPECIFY EXPERIMENT TO PULL ####
 #this should be either the ten digit lims id:
 #identifier = '1013651431' #lims id
 #or the local base directory
-identifier = r'\\10.128.50.43\sd6.3\1030489628_498756_20200617' 
+identifier = r'\\10.128.50.43\sd6.3\1033388795_509652_20200630' 
 
 
 if identifier.find('_')>=0:
@@ -127,6 +128,28 @@ for p in probe_dirs:
     
     probe_dict[probe] = units
 
+for p in probe_dirs:
+    try:
+        print(f'########## stage 1 for probe {p} ###########')
+        probe = p[1]
+        full_path = p[0]
+        
+        # Get unit metrics for this probe    
+        metrics_file = os.path.join(full_path, 'continuous\\Neuropix-PXI-100.0\\metrics.csv')
+        unit_metrics = pd.read_csv(metrics_file)
+        unit_metrics = unit_metrics.set_index('cluster_id')
+        
+        # Get unit data
+        units = probeSync.getUnitData(full_path, syncDataset)
+        units = pd.DataFrame.from_dict(units, orient='index')
+        units['cluster_id'] = units.index.astype(int)
+        units = units.set_index('cluster_id')
+        
+        units = pd.merge(unit_metrics, units, left_index=True, right_index=True, how='outer')
+        
+        probe_dict[probe] = units
+    except Exception as E:
+        logging.error(f'################## {p} failed ###############')
 
 ### PLOT POPULATION RF FOR EACH PROBE ###
 flatten = lambda l: [item[0] for sublist in l for item in sublist]
