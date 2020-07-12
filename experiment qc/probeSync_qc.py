@@ -12,6 +12,7 @@ import pandas as pd
 import numpy as np
 import glob
 import os
+import logging
 
 
 def getUnitData(probeBase,syncDataset):
@@ -48,7 +49,40 @@ def getUnitData(probeBase,syncDataset):
     
     return units
 
+def build_unit_table(probes_to_run, paths, syncDataset):
+    ### GET UNIT METRICS AND BUILD UNIT TABLE ###
+    probe_dirs = [[paths['probe'+pid], pid] for pid in probes_to_run]
+    probe_dict = {a[1]:{} for a in probe_dirs}
+    
+    for p in probe_dirs:
+        try:
+            print(f'########## stage 1 for probe {p} ###########')
+            probe = p[1]
+            full_path = p[0]
+            
+            # Get unit metrics for this probe    
+            metrics_file = os.path.join(full_path, 'continuous\\Neuropix-PXI-100.0\\metrics.csv')
+            unit_metrics = pd.read_csv(metrics_file)
+            unit_metrics = unit_metrics.set_index('cluster_id')
+            
+            # Get unit data
+            units = getUnitData(full_path, syncDataset)
+            units = pd.DataFrame.from_dict(units, orient='index')
+            units['cluster_id'] = units.index.astype(int)
+            units = units.set_index('cluster_id')
+            
+            units = pd.merge(unit_metrics, units, left_index=True, right_index=True, how='outer')
+            
+            probe_dict[probe] = units
+            
+        except Exception as E:
+            logging.error(E)
+        
+        finally:
+            return probe_dict
+            
 
+    
 def get_sync_line_data(syncDataset, line_label=None, channel=None):
     ''' Get rising and falling edge times for a particular line from the sync h5 file
         

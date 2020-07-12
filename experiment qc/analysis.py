@@ -7,6 +7,7 @@ Created on Sat Feb 22 14:18:35 2020
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+import os
 #from numba import njit
  
 
@@ -110,7 +111,25 @@ def lickTriggeredLFP(lick_times, lfp, lfp_time, agarChRange=None, num_licks=20, 
     mtime = np.linspace(-windowBefore, windowAfter, m.size)  
     return m, mtime, first_lick_times
 
-
+def plot_frame_intervals(vsyncs, behavior_frame_count, mapping_frame_count, save_dir):
+    
+    fig, ax = plt.subplots()
+    fig.suptitle('stim frame intervals')
+    ax.plot(np.diff(vsyncs))
+    ax.set_ylim([0, 0.2])
+    
+    ax.axvline(behavior_frame_count, color='k', linestyle='--')
+    
+    expected_break_2 = behavior_frame_count + mapping_frame_count
+    ax.axvline(expected_break_2, color='k', linestyle='--')
+    ax.set_xlabel('frames')
+    ax.set_ylabel('interval, s (capped at 0.2)')
+    
+    ax.text(behavior_frame_count/2, 0.15, 'behavior', horizontalalignment='center')
+    ax.text(behavior_frame_count+mapping_frame_count/2, 0.15, 'rf', horizontalalignment='center')
+    ax.text(mapping_frame_count+behavior_frame_count*1.5, 0.15, 'replay', horizontalalignment='center')
+    
+    fig.savefig(os.path.join(save_dir, 'stim_frame_intervals.png'))
    
 #        lickTriggeredRunning = []
 #        rsamplesBefore = int(round(windowBefore * 60))
