@@ -19,35 +19,25 @@ sys.path.append("..")
 from sync_dataset import Dataset as sync_dataset
 
 
-def get_RFs(probe_dict, mapping_data, FRAME_APPEAR_TIMES, FIG_SAVE_DIR): 
+def get_RFs(probe_dict, mapping_data, first_frame_offset, FRAME_APPEAR_TIMES, FIG_SAVE_DIR): 
     
     ### PLOT POPULATION RF FOR EACH PROBE ###
-    flatten = lambda l: [item[0] for sublist in l for item in sublist]
     ctx_units_percentile = 66 #defines what fraction of units we should assume are cortical (taken from top of probe)
     for p in probe_dict:
         try:
-            print(f'########## stage 2 for probe {p} ###########')
+            print(f'########## Getting RFs for probe {p} ###########')
             u_df = probe_dict[p]
             good_units = u_df[(u_df['quality']=='good')&(u_df['snr']>1)]
-            #max_chan = good_units['peak_channel'].max()
-            # take spikes from the top n channels as proxy for cortex
-            #spikes = good_units.loc[good_units['peak_channel']>max_chan-num_channels_to_take_from_top]['times']
-            #take spikes from top third of units
+         
             ctx_bottom_chan = np.percentile(good_units['peak_channel'], ctx_units_percentile)
             spikes = good_units.loc[good_units['peak_channel']>ctx_bottom_chan]['times']
             rmats = []
             for s in spikes:
-                rmat = analysis.plot_rf(mapping_data, s.flatten(), replay_frame_count, FRAME_APPEAR_TIMES)
+                rmat = analysis.plot_rf(mapping_data, s.flatten(), first_frame_offset, FRAME_APPEAR_TIMES)
                 rmats.append(rmat/rmat.max())
                 
-        #    rmats_normed = np.array([r/r.max() for r in rmats])
             rmats_normed_mean = np.nanmean(rmats, axis=0)
          
-            # plot population RF
-    #        fig, ax = plt.subplots()
-    #        title = p + ' population RF'
-    #        fig.suptitle(title)
-    #        ax.imshow(np.mean(rmats_normed_mean, axis=2), origin='lower')
             
             fig = plt.figure(constrained_layout=True, figsize=[6,6])
             title = p + ' population RF cb'
@@ -81,7 +71,9 @@ def get_RFs(probe_dict, mapping_data, FRAME_APPEAR_TIMES, FIG_SAVE_DIR):
             fig.savefig(os.path.join(FIG_SAVE_DIR, title + '.png'))
         
         except Exception as E:
-            logging.error(f'################## {p} failed ###############')
+            logging.error(f'{p} failed: {E}')
+            print(E)
+                    
 
 if __name__ == "__main__":
     
@@ -134,6 +126,12 @@ if __name__ == "__main__":
     
     assert(total_pkl_frames==len(vf))
     
+    ### CHECK THAT REPLAY AND BEHAVIOR HAVE SAME FRAME COUNT ###
+    print('frames in behavior stim: {}'.format(behavior_frame_count))
+    print('frames in replay stim: {}'.format(replay_frame_count))
+
+    assert(behavior_frame_count==replay_frame_count)
+    
     ### GET UNIT METRICS AND BUILD UNIT TABLE ###
     probe_dirs = [[paths['probe'+pid], pid] for pid in paths['data_probes']]
     probe_dict = {a[1]:{} for a in probe_dirs}
@@ -159,6 +157,6 @@ if __name__ == "__main__":
             
             probe_dict[probe] = units
         except Exception as E:
-            logging.error(f'################## {p} failed ###############')
+            logging.error(f'{p} failed: {E}')
     
-    get_RFs(probe_dict, mapping_data, FRAME_APPEAR_TIMES, FIG_SAVE_DIR)
+    get_RFs(probe_dict, mapping_data, behavior_frame_count, FRAME_APPEAR_TIMES, FIG_SAVE_DIR)

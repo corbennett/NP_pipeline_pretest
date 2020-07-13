@@ -52,11 +52,13 @@ def getUnitData(probeBase,syncDataset):
 def build_unit_table(probes_to_run, paths, syncDataset):
     ### GET UNIT METRICS AND BUILD UNIT TABLE ###
     probe_dirs = [[paths['probe'+pid], pid] for pid in probes_to_run]
+    print(probe_dirs)
     probe_dict = {a[1]:{} for a in probe_dirs}
     
     for p in probe_dirs:
+        print(p)
         try:
-            print(f'########## stage 1 for probe {p} ###########')
+            print(f'########## Getting Units for probe {p} ###########')
             probe = p[1]
             full_path = p[0]
             
@@ -78,8 +80,8 @@ def build_unit_table(probes_to_run, paths, syncDataset):
         except Exception as E:
             logging.error(E)
         
-        finally:
-            return probe_dict
+        
+    return probe_dict
             
 
     
