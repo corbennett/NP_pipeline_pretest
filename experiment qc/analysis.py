@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import os
-#from numba import njit
+import analysis
+from numba import njit
  
 
 def find_spikes_per_trial(spikes, trial_starts, trial_ends):
@@ -17,22 +18,22 @@ def find_spikes_per_trial(spikes, trial_starts, trial_ends):
     
     return teinds - tsinds
 
-# @njit     
-# def makePSTH_numba(spikes, startTimes, windowDur, binSize=0.001, convolution_kernel=0.05, avg=True):
-#     spikes = spikes.flatten()
-#     startTimes = startTimes - convolution_kernel/2
-#     windowDur = windowDur + convolution_kernel
-#     bins = np.arange(0,windowDur+binSize,binSize)
-#     convkernel = np.ones(int(convolution_kernel/binSize))
-#     counts = np.zeros(bins.size-1)
-#     for i,start in enumerate(startTimes):
-#         startInd = np.searchsorted(spikes, start)
-#         endInd = np.searchsorted(spikes, start+windowDur)
-#         counts = counts + np.histogram(spikes[startInd:endInd]-start, bins)[0]
+@njit     
+def makePSTH_numba(spikes, startTimes, windowDur, binSize=0.001, convolution_kernel=0.05, avg=True):
+    spikes = spikes.flatten()
+    startTimes = startTimes - convolution_kernel/2
+    windowDur = windowDur + convolution_kernel
+    bins = np.arange(0,windowDur+binSize,binSize)
+    convkernel = np.ones(int(convolution_kernel/binSize))
+    counts = np.zeros(bins.size-1)
+    for i,start in enumerate(startTimes):
+        startInd = np.searchsorted(spikes, start)
+        endInd = np.searchsorted(spikes, start+windowDur)
+        counts = counts + np.histogram(spikes[startInd:endInd]-start, bins)[0]
     
-#     counts = counts/startTimes.size
-#     counts = np.convolve(counts, convkernel)/(binSize*convkernel.size)
-#     return counts[convkernel.size-1:-convkernel.size], bins[:-convkernel.size-1]
+    counts = counts/startTimes.size
+    counts = np.convolve(counts, convkernel)/(binSize*convkernel.size)
+    return counts[convkernel.size-1:-convkernel.size], bins[:-convkernel.size-1]
 
 def makePSTH(spikes,startTimes,windowDur,binSize=0.01, avg=True):
     bins = np.arange(0,windowDur+binSize,binSize)
@@ -146,3 +147,64 @@ def plot_frame_intervals(vsyncs, behavior_frame_count, mapping_frame_count, save
 #        ax[1].axvline(rsamplesBefore, c='k')
 #        ax[1].set_xlim([0, r.shape[0]])
 #        ax[1].set_ylabel('run speed')
+    
+def plot_population_change_response(probe_dict, behavior_frame_count, mapping_frame_count, trials, FRAME_APPEAR_TIMES, FIG_SAVE_DIR, ctx_units_percentile=66):
+    
+    probe_color_dict = {'A': 'orange',
+                        'B': 'r',
+                        'C': 'k',
+                        'D': 'g',
+                        'E': 'b',
+                        'F': 'm'}
+    change_frames = np.array(trials['change_frame'].dropna()).astype(int)+1
+    active_change_times = FRAME_APPEAR_TIMES[change_frames]
+    first_passive_frame = behavior_frame_count + mapping_frame_count
+    passive_change_times = FRAME_APPEAR_TIMES[first_passive_frame:][change_frames]
+    
+    lfig, lax = plt.subplots()
+    preTime = 0.05
+    postTime = 0.55
+    for p in probe_dict:
+        
+        u_df = probe_dict[p]
+        good_units = u_df[(u_df['quality']=='good')&(u_df['snr']>1)]
+    #    max_chan = good_units['peak_channel'].max()
+    #    # take spikes from the top n channels as proxy for cortex
+    #    spikes = good_units.loc[good_units['peak_channel']>max_chan-num_channels_to_take_from_top]['times']
+        ctx_bottom_chan = np.percentile(good_units['peak_channel'], ctx_units_percentile)
+        spikes = good_units.loc[good_units['peak_channel']>ctx_bottom_chan]['times']
+        sdfs = [[],[]]
+        for s in spikes:
+            s = s.flatten()
+            if s.size>3600:
+                for icts, cts in enumerate([active_change_times, passive_change_times]): 
+                    sdf,t = analysis.plot_psth_change_flashes(cts, s, preTime=preTime, postTime=postTime)
+                    sdfs[icts].append(sdf)
+     
+        # plot population change response
+        fig, ax = plt.subplots()
+        title = p + ' population change response'
+        fig.suptitle(title)
+        ax.plot(t, np.mean(sdfs[0], axis=0), 'k')
+        ax.plot(t, np.mean(sdfs[1], axis=0), 'g')
+        ax.legend(['active', 'passive'])
+        ax.axvline(preTime, c='k')
+        ax.axvline(preTime+0.25, c='k')
+        ax.set_xticks(np.arange(0, preTime+postTime, 0.05))
+        ax.set_xticklabels(np.round(np.arange(-preTime, postTime, 0.05), decimals=2))
+        ax.set_xlabel('Time from change (s)')
+        ax.set_ylabel('Mean population response')
+        fig.savefig(os.path.join(FIG_SAVE_DIR, title + '.png'))
+        
+        mean_active = np.mean(sdfs[0], axis=0)
+        mean_active_baseline = mean_active[:int(preTime*1000)].mean()
+        baseline_subtracted = mean_active - mean_active_baseline
+        lax.plot(t, baseline_subtracted/baseline_subtracted.max(), c=probe_color_dict[p])
+        
+    lax.legend(probe_dict.keys())
+    lax.set_xlim([preTime, preTime+0.1])
+    lax.set_xticks(np.arange(preTime, preTime+0.1, 0.02))
+    lax.set_xticklabels(np.arange(0, 0.1, 0.02))
+    lax.set_xlabel('Time from change (s)')
+    lax.set_ylabel('Normalized response')
+    lfig.savefig(os.path.join(FIG_SAVE_DIR, 'pop_change_response_latency_comparison.png'))

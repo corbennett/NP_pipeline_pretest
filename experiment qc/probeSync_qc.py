@@ -54,7 +54,7 @@ def build_unit_table(probes_to_run, paths, syncDataset):
     probe_dirs = [[paths['probe'+pid], pid] for pid in probes_to_run]
     print(probe_dirs)
     probe_dict = {a[1]:{} for a in probe_dirs}
-    
+    successful_probes = []
     for p in probe_dirs:
         print(p)
         try:
@@ -76,12 +76,12 @@ def build_unit_table(probes_to_run, paths, syncDataset):
             units = pd.merge(unit_metrics, units, left_index=True, right_index=True, how='outer')
             
             probe_dict[probe] = units
-            
+            successful_probes.append(probe)
         except Exception as E:
             logging.error(E)
         
         
-    return probe_dict
+    return  {k:probe_dict[k] for k in successful_probes}
             
 
     

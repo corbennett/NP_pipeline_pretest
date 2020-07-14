@@ -23,6 +23,8 @@ import logging
 #identifier = '1013651431' #lims id
 #or the local base directory
 identifier = r'\\10.128.50.43\sd6.3\1033616558_509940_20200701'
+identifier = r'\\10.128.50.43\sd6.3\1033388795_509652_20200630' 
+
 
 if identifier.find('_')>=0:
     d = data_getters.local_data_getter(base_dir=identifier)
@@ -76,7 +78,7 @@ print('frames in sync file: {}'.format(len(vf)))
 
 assert(total_pkl_frames==len(vf))
 
-### CHECK THAT REPLAY AND BEHAVIOR HAVE SAME FARME COUNT ###
+### CHECK THAT REPLAY AND BEHAVIOR HAVE SAME FRAME COUNT ###
 print('frames in behavior stim: {}'.format(behavior_frame_count))
 print('frames in replay stim: {}'.format(replay_frame_count))
 
@@ -88,9 +90,11 @@ FRAME_APPEAR_TIMES = vf + MONITOR_LAG
 analysis.plot_frame_intervals(vf, behavior_frame_count, mapping_frame_count, FIG_SAVE_DIR) 
 
 
-###BUILD UNIT TABLE####
+### BUILD UNIT TABLE ####
 probe_dict = probeSync.build_unit_table(paths['data_probes'], paths, syncDataset)
 
 from get_RFs_standalone import get_RFs
 get_RFs(probe_dict, mapping_data, behavior_frame_count, FRAME_APPEAR_TIMES, FIG_SAVE_DIR)
-    
+
+analysis.plot_population_change_response(probe_dict, behavior_frame_count, mapping_frame_count, trials, 
+                                         FRAME_APPEAR_TIMES, FIG_SAVE_DIR, ctx_units_percentile=66)

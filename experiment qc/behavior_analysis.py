@@ -55,9 +55,13 @@ def plot_trial_type_pie(trial_counts, labels, save_dir):
         return str(absolute)
 
 
-    wedges, texts, autotexts = ax.pie(trial_counts, labels=labels, colors=colors, 
+    wedges, texts, autotexts = ax.pie(trial_counts, colors=colors, 
                                       autopct=lambda pct: func(pct, trial_counts),
-                                      textprops=dict(color="k"))    
+                                      textprops=dict(color="w")) 
+    ax.legend(wedges, labels,
+          title="Trial Types",
+          loc="center left",
+          bbox_to_anchor=(1, 0, 0.5, 1))
     
     fig.savefig(os.path.join(save_dir, 'trial_type_piechart.png'))
     
