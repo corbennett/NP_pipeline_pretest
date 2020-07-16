@@ -5,11 +5,11 @@ Created on Sat Feb 22 14:18:35 2020
 @author: svc_ccg
 """
 import numpy as np
-import pandas as pd
 from matplotlib import pyplot as plt
 import os
 import analysis
 from numba import njit
+import visual_behavior
  
 
 def find_spikes_per_trial(spikes, trial_starts, trial_ends):
@@ -112,23 +112,29 @@ def lickTriggeredLFP(lick_times, lfp, lfp_time, agarChRange=None, num_licks=20, 
     mtime = np.linspace(-windowBefore, windowAfter, m.size)  
     return m, mtime, first_lick_times
 
-def plot_frame_intervals(vsyncs, behavior_frame_count, mapping_frame_count, save_dir):
+def plot_frame_intervals(vsyncs, behavior_frame_count, mapping_frame_count, 
+                         behavior_start_frame, mapping_start_frame, replay_start_frame, save_dir):
     
     fig, ax = plt.subplots()
     fig.suptitle('stim frame intervals')
     ax.plot(np.diff(vsyncs))
     ax.set_ylim([0, 0.2])
+    vline_locs = [behavior_start_frame, mapping_start_frame, 
+                  replay_start_frame, replay_start_frame+behavior_frame_count]
+    for v in vline_locs:
+        ax.axvline(v, color='k', linestyle='--')
+#    ax.axvline(behavior_start_frame, color='k', linestyle='--')
+#    ax.axvline(mapping_start_frame, color='k', linestyle='--')
+#    ax.axvline(replay_start_frame, color='k', linestyle='--')
     
-    ax.axvline(behavior_frame_count, color='k', linestyle='--')
-    
-    expected_break_2 = behavior_frame_count + mapping_frame_count
-    ax.axvline(expected_break_2, color='k', linestyle='--')
     ax.set_xlabel('frames')
     ax.set_ylabel('interval, s (capped at 0.2)')
     
-    ax.text(behavior_frame_count/2, 0.15, 'behavior', horizontalalignment='center')
-    ax.text(behavior_frame_count+mapping_frame_count/2, 0.15, 'rf', horizontalalignment='center')
-    ax.text(mapping_frame_count+behavior_frame_count*1.5, 0.15, 'replay', horizontalalignment='center')
+    ax.text(behavior_start_frame + behavior_frame_count/2, 0.15, 
+            'behavior', horizontalalignment='center')
+    ax.text(mapping_start_frame+mapping_frame_count/2, 0.15, 
+            'rf', horizontalalignment='center')
+    ax.text(replay_start_frame+behavior_frame_count/2, 0.15, 'replay', horizontalalignment='center')
     
     fig.savefig(os.path.join(save_dir, 'stim_frame_intervals.png'))
    
@@ -208,3 +214,29 @@ def plot_population_change_response(probe_dict, behavior_frame_count, mapping_fr
     lax.set_xlabel('Time from change (s)')
     lax.set_ylabel('Normalized response')
     lfig.savefig(os.path.join(FIG_SAVE_DIR, 'pop_change_response_latency_comparison.png'))
+    
+    
+    
+def plot_running_wheel(behavior_data, mapping_data, replay_data, FIG_SAVE_DIR):   
+    
+    ### Plot Running Wheel Data ###    
+    rfig, rax = plt.subplots()
+    rfig.set_size_inches(12, 4)
+    rfig.suptitle('Running')
+    time_offset = 0
+    colors = ['k', 'g', 'r']
+    for ri, rpkl in enumerate([behavior_data, mapping_data, replay_data]):
+        key = 'behavior' if 'behavior' in rpkl['items'] else 'foraging'
+        intervals = rpkl['items']['behavior']['intervalsms'] if 'intervalsms' not in rpkl else rpkl['intervalsms']
+        time = np.insert(np.cumsum(intervals), 0, 0)/1000.
+        
+        dx,vsig,vin = [rpkl['items'][key]['encoders'][0][rkey] for rkey in ('dx','vsig','vin')]
+        
+        run_speed = visual_behavior.analyze.compute_running_speed(dx[:len(time)],time,vsig[:len(time)],vin[:len(time)])
+        rax.plot(time+time_offset, run_speed, colors[ri])
+        time_offset = time_offset + time[-1]
+        
+    rax.set_xlabel('Time (s)')
+    rax.set_ylabel('Run Speed (cm/s)')
+    rax.legend(['behavior', 'rf map', 'passive'])
+    rfig.savefig(os.path.join(FIG_SAVE_DIR, 'run_speed.png'))

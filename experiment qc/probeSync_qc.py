@@ -21,8 +21,8 @@ def getUnitData(probeBase,syncDataset):
     probeSpikeDir = os.path.join(probeBase, r'continuous\\Neuropix-PXI-100.0')
         
     
-    print(probeTTLDir)
-    print(probeSpikeDir)
+#    print(probeTTLDir)
+#    print(probeSpikeDir)
     
     #Get barcodes from sync file
 #    if 'barcode' in syncDataset.line_labels:
@@ -52,13 +52,12 @@ def getUnitData(probeBase,syncDataset):
 def build_unit_table(probes_to_run, paths, syncDataset):
     ### GET UNIT METRICS AND BUILD UNIT TABLE ###
     probe_dirs = [[paths['probe'+pid], pid] for pid in probes_to_run]
-    print(probe_dirs)
     probe_dict = {a[1]:{} for a in probe_dirs}
     successful_probes = []
     for p in probe_dirs:
         print(p)
         try:
-            print(f'########## Getting Units for probe {p} ###########')
+            print('########## Getting Units for probe {} ###########'.format(p[1]))
             probe = p[1]
             full_path = p[0]
             
